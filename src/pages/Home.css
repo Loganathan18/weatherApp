@@ -1,0 +1,12 @@
+.weather-text{
+    font-size: 4rem !important;
+}
+
+.bg-weather{
+    background-image: linear-gradient(to bottom right, #618fed, #60a7ec);
+}
+
+sup {
+    vertical-align: super;
+    font-size: smaller;
+}

@@ -1,0 +1,2 @@
+(this["webpackJsonpweather-App"]=this["webpackJsonpweather-App"]||[]).push([[55],{139:function(t,n,e){"use strict";e.r(n),e.d(n,"startStatusTap",(function(){return r}));var i=e(14),o=e(13),r=function(){var t=window;t.addEventListener("statusTap",(function(){Object(i.h)((function(){var n=t.innerWidth,e=t.innerHeight,r=document.elementFromPoint(n/2,e/2);if(r){var c=r.closest("ion-content");c&&new Promise((function(t){return Object(o.c)(c,t)})).then((function(){Object(i.f)((function(){return c.scrollToTop(300)}))}))}}))}))}}}]);
+//# sourceMappingURL=55.459596ec.chunk.js.map
