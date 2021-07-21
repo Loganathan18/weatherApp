@@ -9,6 +9,7 @@ import {Network} from '@capacitor/network';
 import * as Constants from '../common/Constants';
 import * as Utilities from '../common/Utilities';
 import { Geolocation } from '@capacitor/geolocation';
+import AppToast from '../components/AppToast';
 const Home: React.FC = () => {
   
   const [showLoading, setShowLoading] = useState(false);
@@ -22,6 +23,8 @@ const Home: React.FC = () => {
   const [speed,setSpeed] = useState("");
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
+  const [toastMessage, setToastMessage] = useState("");
+  const [showToast, setShowToast] = useState(false);
 
   useIonViewDidEnter(()=>{
     const coordinates = Geolocation.getCurrentPosition();
@@ -38,13 +41,15 @@ const Home: React.FC = () => {
   async function getWeatherData() {
     setShowLoading(true);
     const status = await Network.getStatus();
-    
     if(status.connected && status.connectionType==="wifi"){
       let api_id = Constants.Configs.api_id;
       const result = await fetch(Constants.Configs.BASE_URL+'weather?lat='+latitude+'&lon='+longitude+'&appid='+api_id);
       const data = await result.json();
       //Utilities.persistWeatherData(data);
       setWeatherRes(data);
+    } else if(status.connectionType!="wifi"){
+      setToastMessage("Please Connect With Wifi to get weather data..")
+      setShowToast(true);
     }
     setShowLoading(false);
   }
@@ -71,7 +76,7 @@ const Home: React.FC = () => {
     }
 
     if(weatherRes?.weather[0].icon!=undefined){
-      var iconUrl = "http://openweathermap.org/img/w/" + weatherRes?.weather[0].icon + ".png";
+      var iconUrl = "https://openweathermap.org/img/w/" + weatherRes?.weather[0].icon + ".png";
       setWeatherIcon(iconUrl);
     }
 
@@ -81,6 +86,7 @@ const Home: React.FC = () => {
   return (
     <IonPage>
       <IonContent fullscreen>
+        <AppToast isOpen={showToast} onDidDismiss={() => setShowToast(false)} message={toastMessage}  />
         <Preloader isOpen={showLoading} onDidDismiss={() => setShowLoading(false)} />
         <div className="osahan-success vh-100 bg-weather">
           <div className="p-5 text-center">
@@ -91,7 +97,7 @@ const Home: React.FC = () => {
               
           </div>
           <div className="text-center">
-            <p className="text-white weather-text">{currentTemp.toFixed(2)}<sup>&#176; F</sup></p>
+            <p className="text-white weather-text">{currentTemp.toFixed(2)}<sup>&deg; F</sup></p>
             <p className="text-white font-weight-light">{weather}</p>
             <img className="img-fluid" src={weatherIcon}/>
 
@@ -104,7 +110,7 @@ const Home: React.FC = () => {
             </div>
             <div className="text-white font-weight-light col-6 text-center">
               <p>Real Feel</p>
-              {realTemp.toFixed(2)}<sup>&#176; F</sup>
+              {realTemp.toFixed(2)}<sup>&deg; F</sup>
             </div>
             
           </div>
